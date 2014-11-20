@@ -64,9 +64,9 @@ def iterate(board):
 
     """
     sasiedzi = calculate_neighbours(board)
-    np.logical_and((board[:,:] == False), (sasiedzi[:,:] == 3))
+    board[:,:]=np.logical_and((board[:,:] == False), (sasiedzi[:,:] == 3))
        # board[:,:] = True
-    np.logical_not((board[:,:] == True), np.logical_or((sasiedzi[:,:]<2), (sasiedzi[:,:]>3)))
+    board[:,:]=np.logical_and((board[:,:] == True), np.logical_or((sasiedzi[:,:]<2), (sasiedzi[:,:]>3)))
        # board[:,:] = False
     return board
     
