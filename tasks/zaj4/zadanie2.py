@@ -6,9 +6,7 @@ from itertools import chain, permutations, product
 
 
 def calculate_neighbours(board):
-
     """
-
     Funkcja zwraca tablicę która w polu N[R, C] zwraca ilość sąsiadów którą 
     ma komórka Board[R, C]. Za sąsiada uznajemy obszazoną komórkę po bokach lub
     na ukos od danej komórki, komórka nie jest swoim sąsiatem, zatem maksymalna
@@ -31,6 +29,7 @@ def calculate_neighbours(board):
     kolumnyBoard = len(board[0,:])
     wierszeBoard = len(board[:,0])
     nasza = np.zeros((wierszeBoard, kolumnyBoard))
+
     nasza[:, 1:kolumnyBoard] += board[:, 0:(kolumnyBoard-1)]
     nasza[:, 0:(kolumnyBoard-1)] += board[:, 1:kolumnyBoard]
     nasza[1:wierszeBoard, :] += board[0:(wierszeBoard-1), :]
@@ -45,9 +44,7 @@ def calculate_neighbours(board):
 
 
 def iterate(board):
-
     """
-
     Funkcja pobiera planszę game of life i zwraca jej następną iterację.
 
     Zasady Game of life są takie:
@@ -61,15 +58,7 @@ def iterate(board):
     :param np.ndarray board: Dwuwymiarowa tablica zmiennych logicznych która
     obrazuje aktualny stan game of life. Jeśli w danym polu jest True (lub 1)
     oznacza to że dana komórka jest obsadzona
-
     """
     sasiedzi = calculate_neighbours(board)
-    board[:,:]=np.logical_and((board[:,:] == False), (sasiedzi[:,:] == 3))
-       # board[:,:] = True
-    board[:,:]=np.logical_and((board[:,:] == True), np.logical_or((sasiedzi[:,:]<2), (sasiedzi[:,:]>3)))
-       # board[:,:] = False
+    board[:,:] = np.logical_or(sasiedzi == 3, np.logical_and(board, sasiedzi == 2))
     return board
-    
-    
-
-    
