@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
-
+import mmap
+import struct
+import os
+import numpy as np
 class InvalidFormatError(IOError):
     pass
 
 
 def load_data(filename):
-
     """
-
     Funkcja ładuje dane z pliku binarnego. Plik ma następującą strukturę:
 
     * Nagłówek
@@ -63,4 +64,23 @@ def load_data(filename):
 
     W zadaniu 3 będziecie na tym pliku robić obliczenia.
     """
+    if os.stat(filename).st_size < 30:
+        raise InvalidFormatError
+    
+    with open(filename, 'rb') as f:
+        data = mmap.mmap(f.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ)
+        naglowek = struct.unpack('<16sHHHII', data[0:30])
+        if naglowek[0] != b'6o\xfdo\xe2\xa4C\x90\x98\xb2t!\xbeurn':
+            raise InvalidFormatError
+        if naglowek[1] != 3:
+            raise InvalidFormatError
+        if naglowek[5]+naglowek[4]*naglowek[3] != len(data):
+            raise InvalidFormatError
 
+        typ_danych = np.dtype([
+            ("event_id", np.uint16),
+            ("particle_position", np.dtype("3float32")),
+            ("particle mass", np.dtype("float32")),
+            ('particle_velocity', np.dtype("3float32"))])
+        dane = np.memmap(filename, dtype=typ_danych, mode='r', offset=naglowek[5])
+    return dane
