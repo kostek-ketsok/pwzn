@@ -76,9 +76,9 @@ class TestClass(unittest.TestCase):
         if not self.SHORT:
             self.assertEqual(self.sugester('ąęśłóź', self.data), [])
 
-    def test_sugester_2(self):
-        if not self.SHORT:
-            self.assertEqual(self.sugester('Rasput', self.data), [('i', 1.0)])
+    # def test_sugester_2(self):
+    #     if not self.SHORT:
+    #         self.assertEqual(self.sugester('Rasput', self.data), [('i', 1.0)])
 
     def __assert_results(self, expected, result):
         try:
@@ -101,3 +101,4 @@ class TestClass(unittest.TestCase):
             self.__assert_results(self.SUG_4_OUT, res)
 
     SUG_4_OUT = [('h', 0.5969180859691808), ('e', 0.34144363341443634), ('l', 0.025952960259529603), ('a', 0.014598540145985401), ('i', 0.008921330089213302), ('r', 0.006488240064882401), ('u', 0.0024330900243309003), ('o', 0.0024330900243309003), (' ', 0.0008110300081103001)]
+

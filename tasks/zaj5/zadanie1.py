@@ -73,3 +73,29 @@ def suggester(input, data):
      ('e', 0.07352941176470588),
      ('i', 0.014705882352941176)]
     """
+    zwracana_tablica = []
+    ppo = []
+    it = 0
+    sumowanie = 0
+    chararrey = data['7gram'][:]
+    wystapienia = data['calkowita'][:]
+    for elem in chararrey:
+        if elem.startswith(input.encode('ascii')):
+            zwracana_tablica.append((chr(elem[-1]), wystapienia[it]))
+            sumowanie = sumowanie + int(wystapienia[it])
+        it += 1
+
+    for mel in zwracana_tablica:
+        prawdopodobienstwo = int(mel[1])/sumowanie
+        ppo.append((mel[0], prawdopodobienstwo))
+    ppo = sorted(ppo, key=lambda x: x[0], reverse=True)
+    ppo = sorted(ppo, key=lambda x: -x[1])
+    return ppo
+    
+    
+#data = lo_data("/opt/pwzn/zaj5/enwiki-20140903-pages-articles_part_0.xmlascii.bin") 
+#print(data.shape)   
+#print(data['7gram'][0:10])    
+#print(suggester('kot', data))
+
+
