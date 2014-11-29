@@ -68,19 +68,22 @@ def load_data(filename):
         raise InvalidFormatError
     
     with open(filename, 'rb') as f:
-        data = mmap.mmap(f.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ)
-        naglowek = struct.unpack('<16sHHHII', data[0:30])
+        dane_naglowek = mmap.mmap(f.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ)
+        naglowek = struct.unpack('<16sHHHII', dane_naglowek[0:30])
         if naglowek[0] != b'6o\xfdo\xe2\xa4C\x90\x98\xb2t!\xbeurn':
             raise InvalidFormatError
         if naglowek[1] != 3:
             raise InvalidFormatError
-        if naglowek[5]+naglowek[4]*naglowek[3] != len(data):
+        if (naglowek[5]+naglowek[4]*naglowek[3]) != len(dane_naglowek):
             raise InvalidFormatError
+
+        #print(struct.unpack('<16sHHHII', dane_naglowek[0:30]))
+        #print(filename, " offset=", naglowek[5], " ilosc=", naglowek[4], " wielkosc=", naglowek[3], " ", len(dane_naglowek), " ", (naglowek[5]+naglowek[4]*naglowek[3]))
 
         typ_danych = np.dtype([
             ("event_id", np.uint16),
             ("particle_position", np.dtype("3float32")),
-            ("particle mass", np.dtype("float32")),
+            ("particle_mass", np.dtype("float32")),
             ('particle_velocity', np.dtype("3float32"))])
-        dane = np.memmap(filename, dtype=typ_danych, mode='r', offset=naglowek[5])
+        dane = np.memmap(filename, dtype=typ_danych, mode='r', offset=naglowek[5], shape=(4))
     return dane

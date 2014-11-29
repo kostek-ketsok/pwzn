@@ -7,7 +7,6 @@ import numpy as np
 
 def get_event_count(data):
     """
-
     Dane w pliku losowane są z takiego rozkładu:
     position, velocity: każda składowa losowana z rozkładu równomiernego 0-1
     mass: losowana z rozkładu równomiernego od 1 do 100.
@@ -18,6 +17,7 @@ def get_event_count(data):
 
     :param np.ndarray data: Wynik działania zadanie2.load_data
     """
+    #print(data[0])
     return max(data['event_id'][:])
 
 
@@ -41,7 +41,7 @@ def get_center_of_mass(event_id, data):
         #masa[i]=data[i][2]
 
     polozenia = np.array(data['particle_position'][:])
-    masa = np.array(data['particle mass'][:])
+    masa = np.array(data['particle_mass'][:])
     masa_calkowita = masa.sum(axis=0)
     polozenie_suma = np.array(polozenia[:, :] * masa[:, np.newaxis]).sum(axis=0)
     return (polozenie_suma[0]/masa_calkowita, polozenie_suma[1]/masa_calkowita, polozenie_suma[2]/masa_calkowita)
@@ -58,7 +58,7 @@ def get_energy_spectrum(event_id, data, left, right, bins):
 
     Podpowiedż: np.histogram
     """
-    masa = np.array(data['particle mass'][:])
+    masa = np.array(data['particle_mass'][:])
     predkosc =  np.array(data['particle_velocity'][:])
     ekin = np.array(0.5 * masa[:] * np.sqrt(predkosc[:,0] * predkosc[:,0] + predkosc[:,1] * predkosc[:,1] + predkosc[:,2] * predkosc[:,2]))
     ekin2 = []
@@ -66,7 +66,7 @@ def get_energy_spectrum(event_id, data, left, right, bins):
         if (i >= left) | (i<=right):
             ekin2.append(i)
     wartosci, biny = np.histogram(ekin2, bins)
-    print(wartosci)
+    #print(wartosci)
     return wartosci
     
 
