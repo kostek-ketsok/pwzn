@@ -79,11 +79,27 @@ def load_data(filename):
 
         #print(struct.unpack('<16sHHHII', dane_naglowek[0:30]))
         #print(filename, " offset=", naglowek[5], " ilosc=", naglowek[4], " wielkosc=", naglowek[3], " ", len(dane_naglowek), " ", (naglowek[5]+naglowek[4]*naglowek[3]))
+        ilosc_smieci = 0
+        if naglowek[3] == 30:
+            typ_danych = np.dtype([
+                ("event_id", np.uint16),
+                ("particle_position", np.dtype("3float32")),
+                ("particle_mass", np.dtype("float32")),
+                ('particle_velocity', np.dtype("3float32"))])
+        elif naglowek[3] > 30:
+            ilosc_smieci = naglowek[3]- 30
+            typ_danych = np.dtype([
+                ("event_id", np.uint16),
+                ("particle_position", np.dtype("3float32")),
+                ("particle_mass", np.dtype("float32")),
+                ('particle_velocity', np.dtype("3float32")),
+                #('thrash', np.dtype("ilosc_smieci*float32"))])
+                ('thrash',  (np.int8, ilosc_smieci))])
 
-        typ_danych = np.dtype([
-            ("event_id", np.uint16),
-            ("particle_position", np.dtype("3float32")),
-            ("particle_mass", np.dtype("float32")),
-            ('particle_velocity', np.dtype("3float32"))])
-        dane = np.memmap(filename, dtype=typ_danych, mode='r', offset=naglowek[5], shape=(4))
+        #print("wielkosc dtype=", typ_danych.itemsize, " ilosc=", naglowek[3], " ilosc=", ilosc_smieci)
+        #lista = np.zeros((naglowek[4], 1), dtype=typ_danych)
+        #print(lista)
+        #dane = np.memmap(filename, dtype=typ_danych, mode='r', offset=naglowek[5], shape=lista.shape)
+        dane = np.memmap(filename, dtype=typ_danych, mode='r', offset=naglowek[5])
+        #print(dane)
     return dane

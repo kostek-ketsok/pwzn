@@ -17,7 +17,7 @@ def get_event_count(data):
 
     :param np.ndarray data: Wynik działania zadanie2.load_data
     """
-    #print(data[0])
+    #print(data)
     return max(data['event_id'][:])
 
 
@@ -39,12 +39,18 @@ def get_center_of_mass(event_id, data):
         #polozenia[i, 1] = data[i, 2][1]
         #polozenia[i, 2] = data[i, 2][2]
         #masa[i]=data[i][2]
-
-    polozenia = np.array(data['particle_position'][:])
-    masa = np.array(data['particle_mass'][:])
+    
+    polozenia = np.array(data['particle_position'])
+    masa = np.array(data['particle_mass'])
     masa_calkowita = masa.sum(axis=0)
-    polozenie_suma = np.array(polozenia[:, :] * masa[:, np.newaxis]).sum(axis=0)
-    return (polozenie_suma[0]/masa_calkowita, polozenie_suma[1]/masa_calkowita, polozenie_suma[2]/masa_calkowita)
+    polozenie_suma = np.zeros((len(polozenia[:,0]), 3))
+    polozenie_suma = polozenia[:, :] * masa[:, np.newaxis]
+    polozenie_suma2 = polozenie_suma.sum(axis=0)
+    #print(masa)
+    #print(masa_calkowita)
+    print(polozenia)
+    #print(polozenie_suma2[0])
+    return (polozenie_suma2[0]/masa_calkowita, polozenie_suma2[1]/masa_calkowita, polozenie_suma2[2]/masa_calkowita)
 
 
 def get_energy_spectrum(event_id, data, left, right, bins):
@@ -58,13 +64,19 @@ def get_energy_spectrum(event_id, data, left, right, bins):
 
     Podpowiedż: np.histogram
     """
-    masa = np.array(data['particle_mass'][:])
-    predkosc =  np.array(data['particle_velocity'][:])
-    ekin = np.array(0.5 * masa[:] * np.sqrt(predkosc[:,0] * predkosc[:,0] + predkosc[:,1] * predkosc[:,1] + predkosc[:,2] * predkosc[:,2]))
+    v = data['particle_velocity'][:]
+    m = data['particle_mass'][:]
+    v2 = v[:, 0]*v[:, 0]
+    v2_dlugosc = v2[:,0]*v2[:,0] + v2[:,1]*v2[:,1] + v2[:,2]*v2[:,2]
+    ekin = 0.5 * v2_dlugosc[:, np.newaxis] * m[:]
+
+    #print("ekin=", ekin,"\nmasa=", m[0:3], "\nv2=",v2_dlugosc[:])
     ekin2 = []
     for i in ekin:
-        if (i >= left) | (i<=right):
-            ekin2.append(i)
+        if i[0] > left:
+            if i[0] < right:
+                ekin2.append(i[0])
+    ekin2 = sorted(ekin, key=lambda x: x[0])
     wartosci, biny = np.histogram(ekin2, bins)
     #print(wartosci)
     return wartosci
