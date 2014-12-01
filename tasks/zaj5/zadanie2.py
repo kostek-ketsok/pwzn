@@ -103,3 +103,4 @@ def load_data(filename):
         dane = np.memmap(filename, dtype=typ_danych, mode='r', offset=naglowek[5])
         #print(dane)
     return dane
+
