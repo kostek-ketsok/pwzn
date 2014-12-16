@@ -83,20 +83,10 @@ def get_energy_spectrum(event_id, data, left, right, bins):
         it += 1
         #print(it-1, v[it-1], v_kolumna[i], m[it-1], m[i])
 
-    #v = data['particle_velocity'][:]
-    #m = data['particle_mass'][:]
     v2 = v[:, 0]*v[:, 0] + v[:, 1]*v[:, 1] + v[:, 2]*v[:, 2]
     ekin = 0.5 * v2[:] * m[:]
-
     #print("ekin=", ekin[0:3],"\nmasa=", m[0:3], "\nv2=",v2[0:3], "\nv=",v[0:3, 0:3])
-    #print(ekin)
-    ekin_lista = []
-    for i in ekin:
-        if (i > left) & (i < right):
-            ekin_lista.append(i)
-    #ekin_lista = sorted(ekin, key=lambda x: x, reverse=True)
-    wartosci, biny = np.histogram(ekin_lista, bins)
-    #print(ekin_lista)
+    wartosci, biny = np.histogram(ekin, bins, range=(left, right))
     return wartosci
     
 
