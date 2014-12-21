@@ -6,7 +6,8 @@ import time
 from multiprocessing.pool import ThreadPool
 from multiprocessing import Pool
 
-ip = "http://194.29.175.134:4444"
+#ip = "http://194.29.175.134:4444"
+ip = "http://127.0.0.1:4444"
 
 data = requests.post(ip +"/login", {'uname': 'foo', 'password':'bar'}, allow_redirects=False)
 print("DATA: ", data.cookies)
